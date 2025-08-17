@@ -54,6 +54,24 @@ gridElement.addEventListener("keydown", (e) => {
   }
 });
 
+function isValidInitialGrid(gridValues) {
+  for (let i = 0; i < 9; i++) {
+    for (let j = 0; j < 9; j++) {
+      let num = gridValues[i][j];
+      if (num !== 0) {
+        
+        gridValues[i][j] = 0;
+        if (!isValidElement(gridValues, i, j, num)) {
+          gridValues[i][j] = num;
+          return false; 
+        }
+        gridValues[i][j] = num; 
+      }
+    }
+  }
+  return true;
+}
+
 
 function handleClick() {
   let gridValues = [];
@@ -76,6 +94,11 @@ function handleClick() {
   }
 
   // console.log(gridValues);
+
+  if (!isValidInitialGrid(gridValues)) {
+    alert("Invalid puzzle! Duplicate values found in row, column, or subgrid.");
+    return;
+  }
   
   if (solve(gridValues)) {
     // console.log( gridValues);
@@ -137,6 +160,10 @@ function updateGrid(gridValues) {
       if(!cell.classList.contains("given"))
       {
         cell.classList.add("solved")
+      }
+      else
+      {
+        cell.classList.remove("solved")
       }
       cell.value = val;
     });
